@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Set Caddy address to the Railway PORT with explicit HTTP protocol
-# Binding to 0.0.0.0 is crucial for Railway to route traffic to it.
-export BASEROW_CADDY_ADDRESSES="http://0.0.0.0:${PORT:-80}"
-
 # Set Public URL to include 'www' to match the GoDaddy CNAME + Forwarding setup
 export BASEROW_PUBLIC_URL="${BASEROW_PUBLIC_URL:-https://www.doozatable.com}"
 
@@ -14,43 +10,26 @@ export BASEROW_ALLOW_ALL_HOSTS="true"
 # Disable volume check as Railway uses ephemeral filesystem (unless volumes are attached, but check is annoying)
 export DISABLE_VOLUME_CHECK=yes
 
-# ==================================================================================
-# CRITICAL CADDY FIX:
-# The default Caddyfile has a logic "@is_baserow_tool" that checks if the host header
-# matches BASEROW_PUBLIC_URL.
-# Since Railway's internal proxy might send the request with an IP or different host header
-# initially, or if there's a mismatch (http vs https), Caddy might skip the "handle @is_baserow_tool" block
-# and fall through to something else or return empty.
-#
-# We will PATCH the Caddyfile to REMOVE the host check condition entirely.
-# We want Caddy to serve Baserow for ANY request that hits this container.
-# ==================================================================================
+# Define the port explicitly
+APP_PORT="${PORT:-80}"
 
-# 1. Remove the TLS block (lines 10-12 in original)
-# 2. Remove the matcher definition "@is_baserow_tool" (lines 14-16)
-# 3. Remove the "handle @is_baserow_tool {" wrapper (line 18)
-# 4. Remove the closing brace "}" for that handle block (line 59/60)
-
-# We'll use a robust sed replacement to strip these lines to simplify the logic.
-# This makes the Caddyfile simply say: "For any request on this port, route to backend/frontend".
-
-sed -i '/tls {/,/}/d' /baserow/caddy/Caddyfile
-sed -i '/@is_baserow_tool {/,/}/d' /baserow/caddy/Caddyfile
-sed -i '/handle @is_baserow_tool {/d' /baserow/caddy/Caddyfile
-# Remove the specific closing brace. This is tricky with sed blindly.
-# Instead, let's just REWRITE the Caddyfile to a known good state for Railway.
-# This is safer than complex sed regexes on a file we might not fully control future versions of.
+# Caddy configuration:
+# We use :$APP_PORT to bind to all interfaces on that port.
+# We remove 'http://' prefix which can confuse Caddy's site address matching logic in some versions.
+export BASEROW_CADDY_ADDRESSES=":$APP_PORT"
 
 cat > /baserow/caddy/Caddyfile <<EOF
 {
     # Global options
     {\$BASEROW_CADDY_GLOBAL_CONF}
-    # Disable admin endpoint to prevent port conflicts or security issues if exposed
+    # Disable admin endpoint
     admin off
+    # Auto-HTTPS off because Railway handles it
+    auto_https off
 }
 
-# Listen on the port defined by environment variable (Railway \$PORT)
-{\$BASEROW_CADDY_ADDRESSES} {
+# Listen on the port defined by environment variable
+:$APP_PORT {
 
     # 1. Backend API
     handle /api/* {
@@ -80,7 +59,7 @@ cat > /baserow/caddy/Caddyfile <<EOF
         header @downloads Content-disposition "attachment; filename={query.dl}"
 
         header {
-            Access-Control-Allow-Origin {\$BASEROW_PUBLIC_URL:http://localhost}
+            Access-Control-Allow-Origin *
             Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
             Access-Control-Allow-Headers "*"
             Access-Control-Expose-Headers "Content-Length, Content-Type"
