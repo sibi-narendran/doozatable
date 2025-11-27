@@ -1,63 +1,111 @@
 #!/bin/bash
 
-# Set Public URL to include 'www' to match the GoDaddy CNAME + Forwarding setup
-export BASEROW_PUBLIC_URL="${BASEROW_PUBLIC_URL:-https://www.doozatable.com}"
+# ==================================================================================
+# BASEROW RAILWAY ENTRYPOINT (PRODUCTION)
+# ==================================================================================
 
-# CRITICAL FIX: Allow all hosts (*)
+# 1. PUBLIC URL CONFIGURATION
+# ---------------------------
+# Railway provides the custom domain in RAILWAY_PUBLIC_DOMAIN if configured,
+# but we also respect manual overrides.
+if [ -z "$BASEROW_PUBLIC_URL" ]; then
+  if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
+    export BASEROW_PUBLIC_URL="https://$RAILWAY_PUBLIC_DOMAIN"
+  else
+    # Fallback for internal testing or if domain isn't set yet
+    echo "WARNING: No public domain found. Defaulting to localhost."
+    export BASEROW_PUBLIC_URL="http://localhost"
+  fi
+fi
+
+# 2. SECURITY & HOSTING
+# ---------------------
+# Railway puts the app behind a load balancer (Envoy).
+# We must trust all incoming Host headers because the LB terminates SSL and forwards traffic.
 export BASEROW_EXTRA_ALLOWED_HOSTS="*"
 export BASEROW_ALLOW_ALL_HOSTS="true"
 
-# Disable volume check as Railway uses ephemeral filesystem (unless volumes are attached, but check is annoying)
+# 3. STORAGE CONFIGURATION
+# ------------------------
+# Railway storage is ephemeral unless a volume is mounted.
+# We disable the check to allow the app to start even if the volume mount is tricky (though we added one).
 export DISABLE_VOLUME_CHECK=yes
 
-# Define the port explicitly
-APP_PORT="${PORT:-80}"
+# 4. CADDY CONFIGURATION (THE CORE FIX)
+# -------------------------------------
+# Railway assigns a random port to the container and provides it in the $PORT env var.
+# We MUST listen on this port. We cannot hardcode 80.
+# We bind to 0.0.0.0 to accept external connections.
 
-# Caddy configuration:
-# We use :$APP_PORT to bind to all interfaces on that port.
-# We remove 'http://' prefix which can confuse Caddy's site address matching logic in some versions.
+APP_PORT="${PORT:-80}"
 export BASEROW_CADDY_ADDRESSES=":$APP_PORT"
+
+# We completely rewrite the Caddyfile to ensure it's compatible with Railway's architecture.
+# - Remove auto_https (Railway handles SSL)
+# - Remove host matching (Trust Railway routing)
+# - Proxy explicitly to internal services
 
 cat > /baserow/caddy/Caddyfile <<EOF
 {
-    # Global options
+    # Global options from Baserow
     {\$BASEROW_CADDY_GLOBAL_CONF}
-    # Disable admin endpoint
+    
+    # Turn off admin API to prevent port conflicts
     admin off
-    # Auto-HTTPS off because Railway handles it
+    
+    # Turn off auto_https because Railway terminates TLS at the edge
     auto_https off
 }
 
-# Listen on the port defined by environment variable
+# Listen on the Railway-assigned port
 :$APP_PORT {
 
-    # 1. Backend API
+    # LOGGING: Enable access logs for debugging
+    log {
+        output stderr
+        format console
+    }
+
+    # PROXY HEADERS: Ensure downstream services know about the original IP/Protocol
+    # Railway sends X-Forwarded-Proto: https, so Caddy should pass that along.
+
+    # 1. Backend API (Django)
     handle /api/* {
-        reverse_proxy {\$PRIVATE_BACKEND_URL:localhost:8000}
+        reverse_proxy {\$PRIVATE_BACKEND_URL:localhost:8000} {
+            header_up Host {http.request.host}
+            header_up X-Real-IP {http.request.remote.host}
+            header_up X-Forwarded-Proto {http.request.header.X-Forwarded-Proto}
+        }
     }
 
-    # 2. WebSocket
+    # 2. WebSocket (Daphne/Channels)
     handle /ws/* {
-        reverse_proxy {\$PRIVATE_BACKEND_URL:localhost:8000}
+        reverse_proxy {\$PRIVATE_BACKEND_URL:localhost:8000} {
+            header_up Host {http.request.host}
+            header_up X-Real-IP {http.request.remote.host}
+            header_up X-Forwarded-Proto {http.request.header.X-Forwarded-Proto}
+        }
     }
 
-    # 3. MCP
+    # 3. MCP (Model Context Protocol)
     handle /mcp/* {
         reverse_proxy {\$PRIVATE_BACKEND_URL:localhost:8000}
     }
 
-    # 4. Assistant
+    # 4. AI Assistant
     handle /assistant/* {
         reverse_proxy {\$PRIVATE_BACKEND_URL:localhost:8000}
     }
 
     # 5. Media Files (User Uploads)
+    # We serve these directly from disk for performance.
     handle_path /media/* {
         @downloads {
             query dl=*
         }
         header @downloads Content-disposition "attachment; filename={query.dl}"
 
+        # CORS Headers for Media
         header {
             Access-Control-Allow-Origin *
             Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
@@ -76,12 +124,24 @@ cat > /baserow/caddy/Caddyfile <<EOF
         }
     }
 
-    # 7. Frontend (Everything else)
+    # 7. Frontend (Nuxt.js)
+    # This is the default handler for all other routes.
     handle {
-        reverse_proxy {\$PRIVATE_WEB_FRONTEND_URL:localhost:3000}
+        reverse_proxy {\$PRIVATE_WEB_FRONTEND_URL:localhost:3000} {
+            header_up Host {http.request.host}
+            header_up X-Real-IP {http.request.remote.host}
+            header_up X-Forwarded-Proto {http.request.header.X-Forwarded-Proto}
+        }
     }
 }
 EOF
 
-# Execute original entrypoint
+echo "----------------------------------------------------------------"
+echo " RAILWAY ENTRYPOINT STARTING"
+echo " PORT: $APP_PORT"
+echo " PUBLIC_URL: $BASEROW_PUBLIC_URL"
+echo "----------------------------------------------------------------"
+
+# Execute the original Baserow entrypoint
+# We use 'exec' to ensure the process receives signals (SIGTERM) correctly
 exec /baserow.sh start
