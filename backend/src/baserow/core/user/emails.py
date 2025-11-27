@@ -13,7 +13,7 @@ class ResetPasswordEmail(BaseEmailMessage):
         super().__init__(*args, **kwargs)
 
     def get_subject(self):
-        return _("Reset password - Baserow")
+        return _("Reset password - Doozatable")
 
     def get_context(self):
         context = super().get_context()

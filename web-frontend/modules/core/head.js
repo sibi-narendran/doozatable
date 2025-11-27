@@ -1,6 +1,6 @@
 export default {
-  title: 'Baserow',
-  titleTemplate: '%s | Baserow',
+  title: 'Doozatable',
+  titleTemplate: '%s | Doozatable',
   meta: [
     { charset: 'utf-8' },
     {
