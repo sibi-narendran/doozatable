@@ -6,17 +6,10 @@
 
 # 1. PUBLIC URL CONFIGURATION
 # ---------------------------
-# Railway provides the custom domain in RAILWAY_PUBLIC_DOMAIN if configured,
-# but we also respect manual overrides.
-if [ -z "$BASEROW_PUBLIC_URL" ]; then
-  if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
-    export BASEROW_PUBLIC_URL="https://$RAILWAY_PUBLIC_DOMAIN"
-  else
-    # Fallback for internal testing or if domain isn't set yet
-    echo "WARNING: No public domain found. Defaulting to localhost."
-    export BASEROW_PUBLIC_URL="http://localhost"
-  fi
-fi
+# We are switching to the 'app' subdomain logic.
+# If RAILWAY_PUBLIC_DOMAIN is set (by Railway), use it.
+# Otherwise default to app.doozatable.com if no specific override is provided.
+export BASEROW_PUBLIC_URL="${BASEROW_PUBLIC_URL:-https://app.doozatable.com}"
 
 # 2. SECURITY & HOSTING
 # ---------------------
