@@ -16,8 +16,11 @@ if [ -z "$BASEROW_PUBLIC_URL" ]; then
   fi
 fi
 
-# Allow all hosts to prevent 400 Bad Request errors from Django behind Railway's proxy
+# CRITICAL FIX:
+# Allow all hosts (*) so that the Django backend accepts requests from Railway's load balancer.
+# We also set `BASEROW_ALLOW_ALL_HOSTS=true` as Baserow might have a specific internal toggle for this.
 export BASEROW_EXTRA_ALLOWED_HOSTS="*"
+export BASEROW_ALLOW_ALL_HOSTS="true"
 
 # Disable volume check as Railway uses ephemeral filesystem (unless volumes are attached, but check is annoying)
 export DISABLE_VOLUME_CHECK=yes
