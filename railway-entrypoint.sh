@@ -4,19 +4,12 @@
 # BASEROW RAILWAY ENTRYPOINT (PRODUCTION)
 # ==================================================================================
 
-# 0. FIX REDIS PERMISSION ISSUES
-# ------------------------------
-# Railway volumes don't allow chown operations. The base Baserow image tries to
-# chown /baserow/data/redis which fails. We redirect Redis data to /tmp which
-# has no permission restrictions. Redis data is ephemeral (cache/message broker)
-# so this is acceptable. For production, use external Redis via REDIS_HOST.
-
-if [ -z "$REDIS_HOST" ] && [ -z "$REDIS_URL" ]; then
-    # Using embedded Redis - redirect to temp directory to avoid chown issues
-    export REDIS_DIR="/tmp/baserow-redis"
-    mkdir -p "$REDIS_DIR"
-    chown 9999:9999 "$REDIS_DIR" 2>/dev/null || true
-fi
+# 0. CLEANUP OLD DATA DIRECTORIES
+# ---------------------------------
+# Remove old embedded database directories to prevent conflicts.
+# With external PostgreSQL/Redis, these are not needed.
+rm -rf /baserow/data/redis 2>/dev/null || true
+rm -rf /baserow/data/postgres 2>/dev/null || true
 
 # 1. PUBLIC URL CONFIGURATION
 # ---------------------------
@@ -160,13 +153,26 @@ cat > /baserow/caddy/Caddyfile <<EOF
 }
 EOF
 
+# Determine if using external services
+if [ -n "$REDIS_URL" ] || [ -n "$REDIS_HOST" ]; then
+    REDIS_STATUS="external"
+else
+    REDIS_STATUS="embedded"
+fi
+
+if [ -n "$DATABASE_URL" ] || [ -n "$DATABASE_HOST" ]; then
+    DB_STATUS="external"
+else
+    DB_STATUS="embedded"
+fi
+
 echo "================================================================"
 echo " RAILWAY ENTRYPOINT STARTING"
 echo "================================================================"
 echo " PORT: $APP_PORT"
 echo " PUBLIC_URL: $BASEROW_PUBLIC_URL"
-echo " REDIS_HOST: ${REDIS_HOST:-embedded}"
-echo " DATABASE_HOST: ${DATABASE_HOST:-embedded}"
+echo " REDIS: $REDIS_STATUS"
+echo " DATABASE: $DB_STATUS"
 echo "================================================================"
 echo " Note: Baserow startup takes 2-4 minutes. Be patient."
 echo "================================================================"
@@ -176,20 +182,10 @@ echo "================================================================"
 # Railway mounts volumes as root, so we must fix ownership before dropping privileges
 echo "Fixing permissions for /baserow/data, /baserow/media, and /baserow/caddy..."
 
-# REDIS: Symlink to bypass volume permission issues
-# Railway doesn't allow chown on mounted volumes. By symlinking /baserow/data/redis
-# to a temp location, we prevent the base image from failing on chown.
-if [ -z "$REDIS_HOST" ] && [ -z "$REDIS_URL" ]; then
-    # Remove any existing redis dir/symlink (ignore errors)
-    rm -rf /baserow/data/redis 2>/dev/null || true
-    
-    # Create temp redis directory and symlink
-    mkdir -p /tmp/baserow-redis
-    chown 9999:9999 /tmp/baserow-redis
-    ln -sf /tmp/baserow-redis /baserow/data/redis 2>/dev/null || true
-    
-    echo "Redirected Redis data to /tmp/baserow-redis (ephemeral)"
-fi
+# Clean up any leftover embedded database directories
+# This prevents "File exists" errors from the base image
+rm -rf /baserow/data/redis 2>/dev/null || true
+rm -rf /baserow/data/postgres 2>/dev/null || true
 
 # Attempt ownership fix (will partially succeed on Railway - new files will work)
 # We use --no-dereference to not follow symlinks, and ignore errors
