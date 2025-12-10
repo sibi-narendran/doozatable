@@ -62,14 +62,12 @@ COPY backend /baserow/backend
 # 2. Setup Frontend Code
 # Remove the original pre-built assets
 RUN rm -rf /baserow/web-frontend/.nuxt \
-    /baserow/web-frontend/static \
     /baserow/web-frontend/node_modules
 
 # Copy the new build artifacts from the builder stage
 # CRITICAL: We must copy node_modules because Nuxt is an SSR app and needs them at runtime.
 COPY --from=frontend-builder --chown=9999:9999 /web-frontend/node_modules /baserow/web-frontend/node_modules
 COPY --from=frontend-builder --chown=9999:9999 /web-frontend/.nuxt /baserow/web-frontend/.nuxt
-COPY --from=frontend-builder --chown=9999:9999 /web-frontend/static /baserow/web-frontend/static
 
 # 3. Setup Railway Entrypoint
 COPY railway-entrypoint.sh /railway-entrypoint.sh
