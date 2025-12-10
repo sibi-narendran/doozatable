@@ -4,15 +4,15 @@
     "multipleRows": "multiple rows"
   },
   "integrationType": {
-    "localBaserow": "Local Dooza Tables",
+    "localDooza Tables": "Local Dooza Tables",
     "smtp": "SMTP Email",
     "slackBot": "Slack Bot",
     "ai": "AI"
   },
-  "localBaserowIntegrationType": {
-    "localBaserowSummary": "Local Dooza Tables - {name}, {username}",
-    "localBaserowNoUser": "Local Dooza Tables - Not configured",
-    "localBaserowWarning": "Authorizing your account gives everyone who has edit permissions to the application full access to the data you have access to. It's possible to create a second user, give the right permissions and use that one."
+  "localDooza TablesIntegrationType": {
+    "localDooza TablesSummary": "Local Dooza Tables - {name}, {username}",
+    "localDooza TablesNoUser": "Local Dooza Tables - Not configured",
+    "localDooza TablesWarning": "Authorizing your account gives everyone who has edit permissions to the application full access to the data you have access to. It's possible to create a second user, give the right permissions and use that one."
   },
   "aiIntegrationType": {
     "inheritingWorkspace": "Inheriting workspace AI settings",
@@ -23,24 +23,24 @@
     "slackBotNoToken": "Slack Bot - Not configured"
   },
   "serviceType": {
-    "localBaserowGetRow": "Get single row",
-    "localBaserowGetRowDescription": "Read a single row from a Dooza Tables table.",
-    "localBaserowListRows": "List multiple rows",
-    "localBaserowListRowsDescription": "Reads multiple rows from a Dooza Tables table.",
-    "localBaserowAggregateRows": "Summarize field",
-    "localBaserowAggregateRowsDescription": "Summarizes a field in a Dooza Tables table.",
-    "localBaserowCreateRow": "Create a row",
-    "localBaserowCreateRowDescription": "Creates a new row in a Dooza Tables table.",
-    "localBaserowUpdateRow": "Update a row",
-    "localBaserowUpdateRowDescription": "Updates an existing row in a Dooza Tables table.",
-    "localBaserowDeleteRow": "Delete a row",
-    "localBaserowDeleteRowDescription": "Deletes a row in a Dooza Tables table.",
-    "localBaserowRowsCreated": "Rows are created",
-    "localBaserowRowsCreatedDescription": "Triggered when rows are created in a Dooza Tables table.",
-    "localBaserowRowsUpdated": "Rows are updated",
-    "localBaserowRowsUpdatedDescription": "Triggered when rows are updated in a Dooza Tables table.",
-    "localBaserowRowsDeleted": "Rows are deleted",
-    "localBaserowRowsDeletedDescription": "Triggered when rows are deleted in a Dooza Tables table.",
+    "localDooza TablesGetRow": "Get single row",
+    "localDooza TablesGetRowDescription": "Read a single row from a Dooza Tables table.",
+    "localDooza TablesListRows": "List multiple rows",
+    "localDooza TablesListRowsDescription": "Reads multiple rows from a Dooza Tables table.",
+    "localDooza TablesAggregateRows": "Summarize field",
+    "localDooza TablesAggregateRowsDescription": "Summarizes a field in a Dooza Tables table.",
+    "localDooza TablesCreateRow": "Create a row",
+    "localDooza TablesCreateRowDescription": "Creates a new row in a Dooza Tables table.",
+    "localDooza TablesUpdateRow": "Update a row",
+    "localDooza TablesUpdateRowDescription": "Updates an existing row in a Dooza Tables table.",
+    "localDooza TablesDeleteRow": "Delete a row",
+    "localDooza TablesDeleteRowDescription": "Deletes a row in a Dooza Tables table.",
+    "localDooza TablesRowsCreated": "Rows are created",
+    "localDooza TablesRowsCreatedDescription": "Triggered when rows are created in a Dooza Tables table.",
+    "localDooza TablesRowsUpdated": "Rows are updated",
+    "localDooza TablesRowsUpdatedDescription": "Triggered when rows are updated in a Dooza Tables table.",
+    "localDooza TablesRowsDeleted": "Rows are deleted",
+    "localDooza TablesRowsDeletedDescription": "Triggered when rows are deleted in a Dooza Tables table.",
     "coreHTTPTrigger": "Receive an HTTP Request",
     "coreHTTPTriggerDescription": "Triggered when an HTTP request is received.",
     "coreHTTPRequest": "Send an HTTP request",
@@ -82,9 +82,9 @@
     "slackWriteMessageMissingIntegration": "No Slack integration selected."
   },
   "userSourceType": {
-    "localBaserow": "Dooza Tables table authentication"
+    "localDooza Tables": "Dooza Tables table authentication"
   },
-  "localBaserowForm": {
+  "localDooza TablesForm": {
     "user": "User",
     "userMessage": "By creating this connection, you're authorizing the application to use your account to make changes in your local Dooza Tables workspace."
   },
@@ -120,7 +120,7 @@
     "addChoice": "Add choice",
     "choicesRequired": "At least one choice is required"
   },
-  "localBaserowGetRowForm": {
+  "localDooza TablesGetRowForm": {
     "rowFieldLabel": "Row ID",
     "invalidFormula": "The formula is invalid",
     "rowFieldPlaceHolder": "Select a row ID",
@@ -129,7 +129,7 @@
     "noTableChosenForFiltering": "Choose a table to begin using data source filters.",
     "noTableChosenForSorting": "Choose a table to begin using data source sorts."
   },
-  "localBaserowListRowsForm": {
+  "localDooza TablesListRowsForm": {
     "searchFieldPlaceHolder": "Enter a search term...",
     "noTableChosenForFiltering": "Choose a table to begin using data source filters.",
     "noTableChosenForSorting": "Choose a table to begin using data source sorts.",
@@ -147,13 +147,13 @@
     "noTableChosenForSorting": "Choose a table to begin using data source sorts.",
     "refinements": "Refinements"
   },
-  "localBaserowAggregateRowsForm": {
+  "localDooza TablesAggregateRowsForm": {
     "aggregationFieldLabel": "Field",
     "aggregationTypeLabel": "Aggregation",
     "searchFieldPlaceHolder": "Enter a search term...",
     "noTableChosenForFiltering": "Choose a table to begin using data source filters."
   },
-  "localBaserowTableServiceConditionalForm": {
+  "localDooza TablesTableServiceConditionalForm": {
     "addFilter": "Add additional filter",
     "noFilterTitle": "You have not yet created a data source filter",
     "noFilterText": "Data source filters allow you to show Dooza Tables table rows that apply to your conditions.",
@@ -166,7 +166,7 @@
     "useFormulaForValue": "Use a formula for this filter",
     "useDefaultForValue": "Use the default filter for this field"
   },
-  "localBaserowTableServiceSortForm": {
+  "localDooza TablesTableServiceSortForm": {
     "noSortTitle": "You have not yet created a data source sort",
     "noSortText": "Sorts allow you to sort rows by a field.",
     "sortBy": "Sort by",
@@ -228,7 +228,7 @@
     "messagePlaceholder": "Enter a message...",
     "channelNoPrefix": "Remove the '#' before the channel name."
   },
-  "localBaserowTableSelector": {
+  "localDooza TablesTableSelector": {
     "viewFieldLabel": "View",
     "tableFieldLabel": "Table",
     "chooseNoView": "Not selected",
@@ -314,12 +314,12 @@
     "deactivatedTitle": "Periodic trigger deactivated",
     "deactivatedText": "This periodic trigger has been automatically deactivated due to consecutive failures."
   },
-  "localBaserowServiceForm": {
+  "localDooza TablesServiceForm": {
     "integrationDropdownLabel": "Integration",
     "rowIdLabel": "Row ID",
     "rowIdPlaceholder": "Select a row ID"
   },
-  "localBaserowUpsertRowServiceForm": {
+  "localDooza TablesUpsertRowServiceForm": {
     "fieldMappingPlaceholder": "Choose a field value",
     "noTableSelectedMessage": "Choose a table to begin configuring your fields.",
     "noWritableFields": "This table does not contain any writable fields."
