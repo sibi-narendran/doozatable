@@ -200,7 +200,22 @@ fi
 # Ensure Media/Caddy are writable
 chmod -R 777 /baserow/media /baserow/caddy 2>/dev/null || true
 
+# Patch the stop-supervisor.sh script to handle missing PID file gracefully
+# This prevents the crash loop caused by "supervisord.pid: No such file or directory"
+if [ -f /baserow/supervisor/stop-supervisor.sh ]; then
+    # Replace the script with a version that doesn't fail on missing PID
+    cat > /baserow/supervisor/stop-supervisor.sh << 'STOPSCRIPT'
+#!/bin/bash
+echo "Stopping Baserow services..."
+# Try to get PID, but don't fail if file doesn't exist
+PID=$(cat supervisord.pid 2>/dev/null || echo "")
+if [ -n "$PID" ]; then
+    kill -TERM "$PID" 2>/dev/null || true
+fi
+exit 0
+STOPSCRIPT
+    chmod +x /baserow/supervisor/stop-supervisor.sh
+fi
+
 # Start Baserow
-# Note: Running as root for now to avoid supervisor PID file permission issues
-# The base Baserow image handles user switching internally
 exec /baserow.sh start
