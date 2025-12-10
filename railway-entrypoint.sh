@@ -139,10 +139,23 @@ echo "----------------------------------------------------------------"
 # 1. Fix permissions for the mounted volume
 # Railway mounts volumes as root, so we must fix ownership before dropping privileges
 echo "Fixing permissions for /baserow/data, /baserow/media, and /baserow/caddy..."
-# Try to set ownership, but ignore errors (some files like redis dump.rdb might be stubborn)
+
+# 1. Clean up potential permission conflicts in Redis
+# Redis dump.rdb often causes locking issues on volume mounts. Safe to delete (cache).
+rm -rf /baserow/data/redis
+
+# 2. Set ownership
+# We attempt to set ownership to the baserow user.
 chown -R 9999:9999 /baserow/data /baserow/media /baserow/caddy || true
-# Ensure directories are writable by everyone (solves persistence issues if chown fails)
-chmod -R 777 /baserow/data /baserow/media /baserow/caddy || true
+
+# 3. Ensure Postgres directory is SECURE (0700)
+# Postgres refuses to start if permissions are too open (like 777).
+if [ -d /baserow/data/postgres ]; then
+    chmod 700 /baserow/data/postgres
+fi
+
+# 4. Ensure Media/Caddy are writable (777 is fine for these non-strict services)
+chmod -R 777 /baserow/media /baserow/caddy || true
 
 # 2. Start Baserow as the correct user
 # We use 'su-exec' to switch from root to baserow_docker_user (9999)
