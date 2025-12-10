@@ -44,7 +44,8 @@ ENV NODE_ENV=production
 ENV BASEROW_OSS_ONLY=false
 
 # Run the build command
-RUN yarn build
+# --ignore-engines is required because yarn run enforces engine checks again
+RUN yarn build --ignore-engines
 
 # ==========================================
 # Stage 2: Final Runtime Image
