@@ -74,8 +74,8 @@ COPY railway-entrypoint.sh /railway-entrypoint.sh
 RUN chmod +x /railway-entrypoint.sh
 
 # 4. Permissions Check
-# Ensure the baserow user owns the files we just copied
-RUN chown -R 9999:9999 /baserow/web-frontend /baserow/backend
+# Ensure the baserow user owns all necessary directories for runtime
+RUN chown -R 9999:9999 /baserow/web-frontend /baserow/backend /baserow/data
 
 # Switch back to the standard baserow user
 USER 9999
