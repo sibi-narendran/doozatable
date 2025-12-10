@@ -1,12 +1,12 @@
 {
+  "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "DOCKERFILE"
   },
   "deploy": {
-    "startCommand": "/railway-entrypoint.sh",
     "healthcheckPath": "/api/_health/",
-    "healthcheckTimeout": 100,
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 5
   }
 }

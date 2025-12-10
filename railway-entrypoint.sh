@@ -4,6 +4,20 @@
 # BASEROW RAILWAY ENTRYPOINT (PRODUCTION)
 # ==================================================================================
 
+# 0. FIX REDIS PERMISSION ISSUES
+# ------------------------------
+# Railway volumes don't allow chown operations. The base Baserow image tries to
+# chown /baserow/data/redis which fails. We redirect Redis data to /tmp which
+# has no permission restrictions. Redis data is ephemeral (cache/message broker)
+# so this is acceptable. For production, use external Redis via REDIS_HOST.
+
+if [ -z "$REDIS_HOST" ] && [ -z "$REDIS_URL" ]; then
+    # Using embedded Redis - redirect to temp directory to avoid chown issues
+    export REDIS_DIR="/tmp/baserow-redis"
+    mkdir -p "$REDIS_DIR"
+    chown 9999:9999 "$REDIS_DIR" 2>/dev/null || true
+fi
+
 # 1. PUBLIC URL CONFIGURATION
 # ---------------------------
 # If RAILWAY_PUBLIC_DOMAIN is provided by Railway, use it automatically.
@@ -146,35 +160,51 @@ cat > /baserow/caddy/Caddyfile <<EOF
 }
 EOF
 
-echo "----------------------------------------------------------------"
+echo "================================================================"
 echo " RAILWAY ENTRYPOINT STARTING"
+echo "================================================================"
 echo " PORT: $APP_PORT"
 echo " PUBLIC_URL: $BASEROW_PUBLIC_URL"
-echo "----------------------------------------------------------------"
+echo " REDIS_HOST: ${REDIS_HOST:-embedded}"
+echo " DATABASE_HOST: ${DATABASE_HOST:-embedded}"
+echo "================================================================"
+echo " Note: Baserow startup takes 2-4 minutes. Be patient."
+echo "================================================================"
 
 # Execute the original Baserow entrypoint
-# 1. Fix permissions for the mounted volume
+# Fix permissions for the mounted volume
 # Railway mounts volumes as root, so we must fix ownership before dropping privileges
 echo "Fixing permissions for /baserow/data, /baserow/media, and /baserow/caddy..."
 
-# 1. Clean up potential permission conflicts in Redis
-# Redis dump.rdb often causes locking issues on volume mounts. Safe to delete (cache).
-rm -rf /baserow/data/redis
-
-# 2. Set ownership
-# We attempt to set ownership to the baserow user.
-chown -R 9999:9999 /baserow/data /baserow/media /baserow/caddy || true
-
-# 3. Ensure Postgres directory is SECURE (0700)
-# Postgres refuses to start if permissions are too open (like 777).
-if [ -d /baserow/data/postgres ]; then
-    chmod 700 /baserow/data/postgres
+# REDIS: Symlink to bypass volume permission issues
+# Railway doesn't allow chown on mounted volumes. By symlinking /baserow/data/redis
+# to a temp location, we prevent the base image from failing on chown.
+if [ -z "$REDIS_HOST" ] && [ -z "$REDIS_URL" ]; then
+    # Remove any existing redis dir/symlink (ignore errors)
+    rm -rf /baserow/data/redis 2>/dev/null || true
+    
+    # Create temp redis directory and symlink
+    mkdir -p /tmp/baserow-redis
+    chown 9999:9999 /tmp/baserow-redis
+    ln -sf /tmp/baserow-redis /baserow/data/redis 2>/dev/null || true
+    
+    echo "Redirected Redis data to /tmp/baserow-redis (ephemeral)"
 fi
 
-# 4. Ensure Media/Caddy are writable (777 is fine for these non-strict services)
-chmod -R 777 /baserow/media /baserow/caddy || true
+# Attempt ownership fix (will partially succeed on Railway - new files will work)
+# We use --no-dereference to not follow symlinks, and ignore errors
+chown -R --no-dereference 9999:9999 /baserow/data /baserow/media /baserow/caddy 2>/dev/null || true
 
-# 2. Start Baserow as the correct user
+# Ensure Postgres directory is SECURE (0700)
+# Postgres refuses to start if permissions are too open (like 777).
+if [ -d /baserow/data/postgres ]; then
+    chmod 700 /baserow/data/postgres 2>/dev/null || true
+fi
+
+# Ensure Media/Caddy are writable
+chmod -R 777 /baserow/media /baserow/caddy 2>/dev/null || true
+
+# Start Baserow as the correct user
 # We use 'su-exec' to switch from root to baserow_docker_user (9999)
 # We use 'exec' to replace the shell with the process (for signal handling)
 exec su-exec 9999:9999 /baserow.sh start
