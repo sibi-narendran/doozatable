@@ -138,8 +138,8 @@ echo "----------------------------------------------------------------"
 # Execute the original Baserow entrypoint
 # 1. Fix permissions for the mounted volume
 # Railway mounts volumes as root, so we must fix ownership before dropping privileges
-echo "Fixing permissions for /baserow/data..."
-chown -R 9999:9999 /baserow/data
+echo "Fixing permissions for /baserow/data, /baserow/media, and /baserow/caddy..."
+chown -R 9999:9999 /baserow/data /baserow/media /baserow/caddy
 
 # 2. Start Baserow as the correct user
 # We use 'su-exec' to switch from root to baserow_docker_user (9999)

@@ -75,8 +75,8 @@ RUN chmod +x /railway-entrypoint.sh
 
 # 4. Permissions Check
 # Ensure the baserow user owns all necessary directories for runtime
-RUN mkdir -p /baserow/data && \
-    chown -R 9999:9999 /baserow/web-frontend /baserow/backend /baserow/data
+RUN mkdir -p /baserow/data /baserow/media /baserow/caddy && \
+    chown -R 9999:9999 /baserow/web-frontend /baserow/backend /baserow/data /baserow/media /baserow/caddy
 
 # Start the application
 ENTRYPOINT ["/railway-entrypoint.sh"]
