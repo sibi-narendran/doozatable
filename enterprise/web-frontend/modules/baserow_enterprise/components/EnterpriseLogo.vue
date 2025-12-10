@@ -2,7 +2,7 @@
   <!-- must be in sync with `modules/core/components/Logo.vue` apart from the label. -->
   <div class="logo">
     <div v-if="$options.methods.showLabel(parent)" class="logo__label">
-      by Baserow
+      by Dooza Tables
     </div>
     <img
       :src="$options.methods.getLogoUrl(parent)"
