@@ -145,9 +145,9 @@ class NotificationsSummaryEmail(BaseEmailMessage):
         count = self.new_notifications_count
 
         if count == 1:
-            return _("You have 1 new notification - Baserow")
+            return _("You have 1 new notification - Dooza Tables")
 
-        return _("You have %(count)d new notifications - Baserow") % {"count": count}
+        return _("You have %(count)d new notifications - Dooza Tables") % {"count": count}
 
     def get_context(self):
         context = super().get_context()

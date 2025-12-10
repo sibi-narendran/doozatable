@@ -3,7 +3,8 @@
 # ==========================================
 # We use a standard Node image to build the frontend assets.
 # Using 'bookworm' to match Baserow's Debian base.
-FROM node:22-bookworm-slim AS frontend-builder
+# Using Node 18 to match the likely runtime version of Baserow 2.0.1 and ensure native module compatibility.
+FROM node:18-bookworm-slim AS frontend-builder
 
 WORKDIR /app
 

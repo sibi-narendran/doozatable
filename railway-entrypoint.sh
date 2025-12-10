@@ -6,13 +6,30 @@
 
 # 1. PUBLIC URL CONFIGURATION
 # ---------------------------
-# We are switching to the 'app' subdomain logic.
-# If RAILWAY_PUBLIC_DOMAIN is set (by Railway), use it.
+# If RAILWAY_PUBLIC_DOMAIN is provided by Railway, use it automatically.
+if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
+    export BASEROW_PUBLIC_URL="https://$RAILWAY_PUBLIC_DOMAIN"
+fi
+
 # Otherwise default to app.doozatable.com if no specific override is provided.
 export BASEROW_PUBLIC_URL="${BASEROW_PUBLIC_URL:-https://app.doozatable.com}"
 
 # 2. SECURITY & HOSTING
 # ---------------------
+# Auto-generate secrets if missing (prevents crash on first deploy)
+if [ -z "$SECRET_KEY" ]; then
+    echo "WARNING: SECRET_KEY not set. Generating a random one."
+    export SECRET_KEY=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 50)
+fi
+
+if [ -z "$BASEROW_JWT_SIGNING_KEY" ]; then
+    echo "WARNING: BASEROW_JWT_SIGNING_KEY not set. Generating a random one."
+    export BASEROW_JWT_SIGNING_KEY=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 50)
+fi
+
+# Enable SSL trust for Railway Load Balancer
+export BASEROW_ENABLE_SECURE_PROXY_SSL_HEADER="true"
+
 # Railway puts the app behind a load balancer (Envoy).
 # We must trust all incoming Host headers because the LB terminates SSL and forwards traffic.
 export BASEROW_EXTRA_ALLOWED_HOSTS="*"
