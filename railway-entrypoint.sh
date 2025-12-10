@@ -15,11 +15,21 @@
 if [ -n "$DATABASE_URL" ] || [ -n "$DATABASE_HOST" ]; then
     echo "External PostgreSQL detected. Disabling embedded postgres."
     export DISABLE_EMBEDDED_PSQL=yes
+else
+    echo "ERROR: No DATABASE_URL or DATABASE_HOST provided!"
+    echo "Railway deployment requires external PostgreSQL."
+    echo "Please add a PostgreSQL database to your Railway project."
+    exit 1
 fi
 
 if [ -n "$REDIS_URL" ] || [ -n "$REDIS_HOST" ]; then
     echo "External Redis detected. Disabling embedded redis."
     export DISABLE_EMBEDDED_REDIS=yes
+else
+    echo "ERROR: No REDIS_URL or REDIS_HOST provided!"
+    echo "Railway deployment requires external Redis."
+    echo "Please add a Redis database to your Railway project."
+    exit 1
 fi
 
 # 1. PUBLIC URL CONFIGURATION
@@ -188,37 +198,29 @@ echo "================================================================"
 echo " Note: Baserow startup takes 2-4 minutes. Be patient."
 echo "================================================================"
 
-# Execute the original Baserow entrypoint
-# Fix permissions for the mounted volume
-# Railway mounts volumes as root, so we must fix ownership before dropping privileges
+# 5. FIX PERMISSIONS
+# -------------------
+# Railway mounts volumes as root, so we fix ownership before starting
 echo "Fixing permissions for /baserow/data, /baserow/media, and /baserow/caddy..."
 
-# Clean up any leftover embedded database directories
-# This prevents "File exists" errors from the base image
-rm -rf /baserow/data/redis 2>/dev/null || true
-rm -rf /baserow/data/postgres 2>/dev/null || true
+# Create directories if they don't exist
+mkdir -p /baserow/data /baserow/media /baserow/caddy
 
 # Attempt ownership fix (will partially succeed on Railway - new files will work)
 # We use --no-dereference to not follow symlinks, and ignore errors
 chown -R --no-dereference 9999:9999 /baserow/data /baserow/media /baserow/caddy 2>/dev/null || true
 
-# Ensure Postgres directory is SECURE (0700)
-# Postgres refuses to start if permissions are too open (like 777).
-if [ -d /baserow/data/postgres ]; then
-    chmod 700 /baserow/data/postgres 2>/dev/null || true
-fi
-
 # Ensure Media/Caddy are writable
 chmod -R 777 /baserow/media /baserow/caddy 2>/dev/null || true
 
+# 6. PATCH STOP SCRIPT
+# --------------------
 # Patch the stop-supervisor.sh script to handle missing PID file gracefully
 # This prevents the crash loop caused by "supervisord.pid: No such file or directory"
 if [ -f /baserow/supervisor/stop-supervisor.sh ]; then
-    # Replace the script with a version that doesn't fail on missing PID
     cat > /baserow/supervisor/stop-supervisor.sh << 'STOPSCRIPT'
 #!/bin/bash
 echo "Stopping Baserow services..."
-# Try to get PID, but don't fail if file doesn't exist
 PID=$(cat supervisord.pid 2>/dev/null || echo "")
 if [ -n "$PID" ]; then
     kill -TERM "$PID" 2>/dev/null || true
@@ -228,5 +230,7 @@ STOPSCRIPT
     chmod +x /baserow/supervisor/stop-supervisor.sh
 fi
 
-# Start Baserow
+# 7. START BASEROW
+# ----------------
+echo "Starting Baserow..."
 exec /baserow.sh start
