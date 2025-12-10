@@ -200,7 +200,7 @@ fi
 # Ensure Media/Caddy are writable
 chmod -R 777 /baserow/media /baserow/caddy 2>/dev/null || true
 
-# Start Baserow as the correct user
-# We use 'su-exec' to switch from root to baserow_docker_user (9999)
-# We use 'exec' to replace the shell with the process (for signal handling)
-exec su-exec 9999:9999 /baserow.sh start
+# Start Baserow
+# Note: Running as root for now to avoid supervisor PID file permission issues
+# The base Baserow image handles user switching internally
+exec /baserow.sh start
