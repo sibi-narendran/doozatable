@@ -78,8 +78,5 @@ RUN chmod +x /railway-entrypoint.sh
 RUN mkdir -p /baserow/data && \
     chown -R 9999:9999 /baserow/web-frontend /baserow/backend /baserow/data
 
-# Switch back to the standard baserow user
-USER 9999
-
 # Start the application
 ENTRYPOINT ["/railway-entrypoint.sh"]

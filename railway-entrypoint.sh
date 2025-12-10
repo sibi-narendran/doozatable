@@ -136,5 +136,12 @@ echo " PUBLIC_URL: $BASEROW_PUBLIC_URL"
 echo "----------------------------------------------------------------"
 
 # Execute the original Baserow entrypoint
-# We use 'exec' to ensure the process receives signals (SIGTERM) correctly
-exec /baserow.sh start
+# 1. Fix permissions for the mounted volume
+# Railway mounts volumes as root, so we must fix ownership before dropping privileges
+echo "Fixing permissions for /baserow/data..."
+chown -R 9999:9999 /baserow/data
+
+# 2. Start Baserow as the correct user
+# We use 'su-exec' to switch from root to baserow_docker_user (9999)
+# We use 'exec' to replace the shell with the process (for signal handling)
+exec su-exec 9999:9999 /baserow.sh start
