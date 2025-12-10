@@ -213,7 +213,33 @@ chown -R --no-dereference 9999:9999 /baserow/data /baserow/media /baserow/caddy 
 # Ensure Media/Caddy are writable
 chmod -R 777 /baserow/media /baserow/caddy 2>/dev/null || true
 
-# 6. START BASEROW
+# 6. FIX EVENT LISTENER BUG
+# --------------------------
+# The stop-supervisor.sh script has `set -e` and can fail if supervisord.pid
+# doesn't exist yet when an event arrives. This causes the entire container to die.
+# We patch it to handle missing PID file gracefully.
+if [ -f /baserow/supervisor/stop-supervisor.sh ]; then
+    cat > /baserow/supervisor/stop-supervisor.sh << 'STOPSCRIPT'
+#!/usr/bin/env bash
+# Patched version: Removed set -e to prevent early exit on missing PID file
+
+# This file implements supervisord's eventlistener protocol
+# See: http://supervisord.org/events.html#event-listeners-and-event-notifications
+
+printf "READY\n";
+
+while read -r; do
+  echo -e "\e[31mBaserow was stopped or one of its services crashed, see the logs above for more details. \e[0m" >&2
+  # Use || true to prevent exit if PID file doesn't exist yet
+  if [ -f supervisord.pid ]; then
+    kill -SIGTERM "$(cat supervisord.pid)" || true
+  fi
+done < /dev/stdin
+STOPSCRIPT
+    chmod +x /baserow/supervisor/stop-supervisor.sh
+fi
+
+# 7. START BASEROW
 # ----------------
 echo "Starting Baserow..."
 exec /baserow.sh start
