@@ -4,12 +4,23 @@
 # BASEROW RAILWAY ENTRYPOINT (PRODUCTION)
 # ==================================================================================
 
-# 0. CLEANUP OLD DATA DIRECTORIES
-# ---------------------------------
-# Remove old embedded database directories to prevent conflicts.
-# With external PostgreSQL/Redis, these are not needed.
-rm -rf /baserow/data/redis 2>/dev/null || true
-rm -rf /baserow/data/postgres 2>/dev/null || true
+# 0. DISABLE EMBEDDED SERVICES (CRITICAL!)
+# -----------------------------------------
+# Railway requires external PostgreSQL and Redis.
+# We MUST tell Baserow to disable the embedded services, otherwise the supervisor
+# `processes` event listener will fail trying to manage them.
+#
+# These variables prevent Baserow from attempting to start/manage embedded databases.
+
+if [ -n "$DATABASE_URL" ] || [ -n "$DATABASE_HOST" ]; then
+    echo "External PostgreSQL detected. Disabling embedded postgres."
+    export DISABLE_EMBEDDED_PSQL=yes
+fi
+
+if [ -n "$REDIS_URL" ] || [ -n "$REDIS_HOST" ]; then
+    echo "External Redis detected. Disabling embedded redis."
+    export DISABLE_EMBEDDED_REDIS=yes
+fi
 
 # 1. PUBLIC URL CONFIGURATION
 # ---------------------------
