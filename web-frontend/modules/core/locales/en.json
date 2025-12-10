@@ -129,7 +129,7 @@
     "markAllAsRead": "Mark all as read",
     "clearAll": "Clear all",
     "noNotificationTitle": "You don't have any notifications",
-    "noNotification": "We'll notify you about important updates and any time you're mentioned on Doozatable.",
+    "noNotification": "We'll notify you about important updates and any time you're mentioned on Dooza Tables.",
     "newNotificationsAvailable": "New notifications available",
     "refresh": "Refresh"
   },
@@ -163,7 +163,7 @@
     "errorInvalidPasswordTitle": "Invalid password",
     "errorInvalidPasswordMessage": "Could not delete your account because your password is invalid.",
     "errorUserIsLastAdminTitle": "Last administrator",
-    "errorUserIsLastAdminMessage": "Could not delete your account because your are the last administrator of this Doozatable instance.",
+    "errorUserIsLastAdminMessage": "Could not delete your account because your are the last administrator of this Dooza Tables instance.",
     "accountDeletedSuccessTitle": "Account deletion scheduled",
     "accountDeletedSuccessMessage": "Your account has been scheduled to be deleted.",
     "workspaceLoadingError": "Workspaces checking has failed",
@@ -201,7 +201,7 @@
   },
   "exportWorkspaceModal": {
     "title": "Export",
-    "description": "Your data will be exported as a ZIP file, which can be imported into other Doozatable instance.",
+    "description": "Your data will be exported as a ZIP file, which can be imported into other Dooza Tables instance.",
     "exportSettings": "Export settings",
     "export": "Export data",
     "reset": "Start new",
@@ -222,8 +222,8 @@
     "onlyStructureDescription": "If enabled, only the structure of the applications will be exported. The data will not be included."
   },
   "importWorkspaceModal": {
-    "title": "Import Doozatable data",
-    "description": "You can import an existing Doozatable data by uploading the .zip file from other Doozatable instance.",
+    "title": "Import Dooza Tables data",
+    "description": "You can import an existing Dooza Tables data by uploading the .zip file from other Dooza Tables instance.",
     "import": "Import data",
     "upload": "Upload",
     "uploadAndImport": "Upload & Import",
@@ -238,11 +238,11 @@
     "selectAll": "Select all",
     "databases": "Databases",
     "applications": "Applications",
-    "successTitle": "Successfully imported the Doozatable data",
+    "successTitle": "Successfully imported the Dooza Tables data",
     "successMessage": "Imported {count} applications",
     "signatureVerificationNote": "It's not possible to import a zip file from an untrusted source.",
     "invalidResourceTitle": "Invalid resource",
-    "invalidResourceMessage": "The provided file is not a valid Doozatable export.",
+    "invalidResourceMessage": "The provided file is not a valid Dooza Tables export.",
     "untrustedPublicKeyTitle": "Untrusted signature",
     "untrustedPublicKeyMessage": "The provided file is signed with an untrusted public key. Ask your administrator to add the public key to the list of trusted keys or disable the signature verification to be able to import this file.",
     "importingState": "Importing...",
@@ -311,19 +311,19 @@
     "openaiApiKeyDescription": "Provide an OpenAI API key if you would like to enable the integration. [Instructions on getting an API key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key).",
     "openaiOrganization": "Organization (optional)",
     "openaiModelsLabel": "Enabled Models",
-    "openaiModelsDescription": "Provide a list of comma separated [OpenAI models](https://platform.openai.com/docs/models/continuous-model-upgrades) that can be used in Doozatable. (e.g. `gpt-3.5-turbo,gpt-4`)",
+    "openaiModelsDescription": "Provide a list of comma separated [OpenAI models](https://platform.openai.com/docs/models/continuous-model-upgrades) that can be used in Dooza Tables. (e.g. `gpt-3.5-turbo,gpt-4`)",
     "openaiBaseUrl": "Base URL",
     "openaiBaseUrlDescription": "Uses the default OpenAI base URL by default if empty. Can optionally be changed to https://eu.api.openai.com/v1, https://<your-resource-name>.openai.azure.com, or any other OpenAI compatible API.",
     "anthropic": "Anthropic",
     "anthropicApiKeyLabel": "API Key",
     "anthropicApiKeyDescription": "Provide an Anthropic API key if you would like to enable the integration. [Instructions on getting an API key](https://docs.anthropic.com/en/api/getting-started).",
     "anthropicModelsLabel": "Enabled Models",
-    "anthropicModelsDescription": "Provide a list of comma separated [Anthropic models](https://docs.anthropic.com/en/docs/about-claude/models) that can be used in Doozatable. (e.g. `claude-3-5-sonnet-20241022,claude-3-opus-20240229`)",
+    "anthropicModelsDescription": "Provide a list of comma separated [Anthropic models](https://docs.anthropic.com/en/docs/about-claude/models) that can be used in Dooza Tables. (e.g. `claude-3-5-sonnet-20241022,claude-3-opus-20240229`)",
     "mistral": "Mistral",
     "mistralApiKeyLabel": "API Key",
     "mistralApiKeyDescription": "Provide a Mistral API key if you would like to enable the integration. [Instructions on getting an API key](https://docs.mistral.ai/getting-started/quickstart/).",
     "mistralModelsLabel": "Enabled Models",
-    "mistralModelsDescription": "Provide a list of comma separated [Mistral models](https://docs.mistral.ai/getting-started/models/models_overview/) that can be used in Doozatable. (e.g. `mistral-large-latest,mistral-small-latest`)",
+    "mistralModelsDescription": "Provide a list of comma separated [Mistral models](https://docs.mistral.ai/getting-started/models/models_overview/) that can be used in Dooza Tables. (e.g. `mistral-large-latest,mistral-small-latest`)",
     "ollama": "Ollama",
     "ollamaHostLabel": "Host",
     "ollamaHostDescription": "Provide the hostname to your [Ollama](https://ollama.com/) server. This typically runs locally on your own device.",
@@ -334,7 +334,7 @@
     "openRouterApiKeyDescription": "Provide an OpenRouter API key if you would like to enable the integration. [get an API key](https://openrouter.ai/settings/keys).",
     "openRouterOrganization": "Organization (optional)",
     "openRouterModelsLabel": "Enabled Models",
-    "openRouterModelsDescription": "Provide a list of comma separated [OpenRouter models](https://openrouter.ai/models) that can be used in Doozatable. (e.g. `openai/gpt-4o,anthropic/claude-3-haiku`)"
+    "openRouterModelsDescription": "Provide a list of comma separated [OpenRouter models](https://openrouter.ai/models) that can be used in Dooza Tables. (e.g. `openai/gpt-4o,anthropic/claude-3-haiku`)"
   },
   "generativeAIWorkspaceSettings": {
     "title": "Generative AI settings",
@@ -419,7 +419,7 @@
     "table": "Table",
     "tableDesc": "Create a new place to manage data in your database.",
     "importWorkspace": "Import data",
-    "importWorkspaceDesc": "Add existing data from a Doozatable instance."
+    "importWorkspaceDesc": "Add existing data from a Dooza Tables instance."
   },
   "applicationForm": {
     "nameLabel": "Name",
@@ -493,12 +493,12 @@
   "dashboard": {
     "title": "Dashboard",
     "alertTitle": "We need your help!",
-    "alertText": "By sharing Doozatable you are helping us to improve the product and to make it more useful for you.",
-    "tweetContent": "Check out @baserow an open source no-code database tool and Airtable alternative!",
-    "redditTitle": "'Doozatable - An open source no-code database",
+    "alertText": "By sharing Dooza Tables you are helping us to improve the product and to make it more useful for you.",
+    "tweetContent": "Check out Dooza Tables an open source no-code database tool and Airtable alternative!",
+    "redditTitle": "'Dooza Tables - An open source no-code database",
     "becomeGithubSponsor": "Become a GitHub sponsor",
     "starOnGitHub": "Star us on GitHub",
-    "shareOnTwitter": "Tweet about Doozatable",
+    "shareOnTwitter": "Tweet about Dooza Tables",
     "shareOnReddit": "Share on Reddit",
     "shareOnFacebook": "Share on Facebook",
     "shareOnLinkedIn": "Share on LinkedIn",
@@ -507,7 +507,7 @@
     "knowledgeBase": "Knowledge base",
     "knowledgeBaseMessage": "Find answers to all of your questions",
     "tutorials": "Tutorials",
-    "tutorialsMessage": "Discover the potential of Doozatable",
+    "tutorialsMessage": "Discover the potential of Dooza Tables",
     "apiDocumentation": "API documentation",
     "apiDocumentationMessage": "Learn more about our code",
     "emptyWorkspace": "This workspace is empty",
@@ -527,7 +527,7 @@
     "emailPlaceholder": "Enter your email address..",
     "passwordPlaceholder": "Enter your password..",
     "forgotPassword": "Forgot?",
-    "signUpText": "New to Doozatable?",
+    "signUpText": "New to Dooza Tables?",
     "signUp": "Sign up",
     "displayPasswordLogin": "Log in using email and password",
     "redirecting": "Redirecting to authentication provider..."
@@ -538,7 +538,7 @@
     "repeatNewPassword": "Repeat new password",
     "submit": "Change password",
     "changed": "Password changed",
-    "message": "You can now login to Doozatable using your new password.",
+    "message": "You can now login to Dooza Tables using your new password.",
     "errorInvalidLinkTitle": "Invalid link",
     "errorInvalidLinkMessage": "Could not reset the password because the link is invalid.",
     "errorLinkExpiredTitle": "Link expired",
@@ -551,7 +551,7 @@
     "title": "Sign up",
     "disabled": "Sign up is disabled",
     "disabledMessage": "It's not possible to create an account because it has been disabled.",
-    "requireFirstUser": "Welcome to Doozatable!",
+    "requireFirstUser": "Welcome to Dooza Tables!",
     "requireFirstUserMessage": "Please fill the form below to create the admin user.",
     "emailPlaceholder": "Enter your email address..",
     "namePlaceholder": "Enter your name..",
@@ -565,7 +565,7 @@
     "message": "Enter your email address and we’ll send you a link to reset your password.",
     "submit": "Send link",
     "confirmationTitle": "Check your email",
-    "confirmation": "We sent an email to {email}, which contains a link to reset your Doozatable password.",
+    "confirmation": "We sent an email to {email}, which contains a link to reset your Dooza Tables password.",
     "disabled": "Forgot password is disabled",
     "disabledMessage": "It's not possible to reset the password because it has been disabled.",
     "loginText": "Already have account and password?",
@@ -574,15 +574,15 @@
   "settings": {
     "settingsTitle": "Admin settings",
     "baserowInstanceId": "Instance ID",
-    "instanceIdDescription": "The instance ID is the unique identifier of your Doozatable copy.",
-    "baserowVersion": "Doozatable version",
+    "instanceIdDescription": "The instance ID is the unique identifier of your Dooza Tables copy.",
+    "baserowVersion": "Dooza Tables version",
     "baserowVersionDescription": "The version number of this instance.",
     "accountRestrictions": "Account restrictions",
     "settingAllowResetPasswordName": "Allow resetting password",
     "settingAllowResetPasswordDescription": "By default, users can request a password reset link.",
     "settingAllowResetPasswordWarning": "Please note that you could lock yourself out of the system and that access can't be restored if you forget your password.",
     "settingAllowNewAccountsName": "Allow creating new accounts",
-    "settingAllowNewAccountsDescription": "By default, any user visiting your Doozatable domain can sign up for a new account.",
+    "settingAllowNewAccountsDescription": "By default, any user visiting your Dooza Tables domain can sign up for a new account.",
     "settingAllowSignupsViaWorkspaceInvitationsName": "Allow signups via workspace invitations",
     "settingAllowSignupsViaWorkspaceInvitationDescription": "Even if the creation of new accounts is disabled, this option permits directly invited users to still create an account.",
     "settingAllowNonStaffCreateWorkspaceOperation": "Allow everyone to create new workspaces",
@@ -879,7 +879,7 @@
     "roleOrJob": "Role or job title...",
     "people": "How many people are in your team?",
     "country": "Country",
-    "share": "I'm okay with sharing this with the Doozatable team"
+    "share": "I'm okay with sharing this with the Dooza Tables team"
   },
   "teamStep": {
     "title": "Let's build your first workspace together!",
@@ -1032,12 +1032,12 @@
     "back": "Back"
   },
   "welcomeGuidedTourStep": {
-    "title": "Welcome to Doozatable",
+    "title": "Welcome to Dooza Tables",
     "content": "Let’s take a quick tour to get you familiar with the basics. In just a few clicks, you’ll learn how to organize and visualize your data effortlessly",
     "buttonText": "Start the tour"
   },
   "controlCenterGuidedTourStep": {
-    "title": "Your Doozatable Control Center",
+    "title": "Your Dooza Tables Control Center",
     "content": "The left sidebar helps you manage your workspace:\n\n- Home – Access your main dashboard.\n- Notifications – Stay updated on changes and mentions.\n- Invite Members – Collaborate by adding team members.\n- Trash – List and recover all your deleted items."
   },
   "createNewGuidedTourStep": {
@@ -1049,7 +1049,7 @@
     "createEndpoint": "Create endpoint",
     "createNewTitle": "Create MCP server endpoint",
     "backToOverview": "Back",
-    "noEndpointsMessage": "No MCP (Model Context Protocol) server endpoints have been added. These can be used to directly integrate with an LLM like Claude, and let the LLM perform actions directly in Doozatable. Create a server endpoint to get started."
+    "noEndpointsMessage": "No MCP (Model Context Protocol) server endpoints have been added. These can be used to directly integrate with an LLM like Claude, and let the LLM perform actions directly in Dooza Tables. Create a server endpoint to get started."
   },
   "mcpEndpointForm": {
     "nameLabel": "Name",
@@ -1059,9 +1059,9 @@
     "detailLabel": "More details",
     "endpointURLIntro": "The MCP (Model Context Protocol) server URL can be added to any client that supports MCP servers. It's a unique endpoint that gives the LLM direct access to perform actions in the workspace on your behalf.",
     "reveal": "Reveal full URL",
-    "warning": "Treat your MCP URL like a password, as it has the ability to modify data in Doozatable.",
-    "claudeInstructions": "Three simple steps to get started with Claude Desktop and the Doozatable MCP.\n\n1. Open the Claude Desktop settings from the navigation bar. (⌘+,)\n1. Go to the \"Develop\" tab, and click on \"Edit Config\".\n1. Include the following JSON configuration in `claude_desktop_config.json`.",
-    "cursorInstructions": "Three simple steps to get started with Cursor and the Doozatable MCP.\n\n1. Open Cursor settings (⇧+⌘+J)\n1. Navigate to the \"MCP\" tab and click \"Add MCP Server\"\n1. Add the following JSON configuration.",
+    "warning": "Treat your MCP URL like a password, as it has the ability to modify data in Dooza Tables.",
+    "claudeInstructions": "Three simple steps to get started with Claude Desktop and the Dooza Tables MCP.\n\n1. Open the Claude Desktop settings from the navigation bar. (⌘+,)\n1. Go to the \"Develop\" tab, and click on \"Edit Config\".\n1. Include the following JSON configuration in `claude_desktop_config.json`.",
+    "cursorInstructions": "Three simple steps to get started with Cursor and the Dooza Tables MCP.\n\n1. Open Cursor settings (⇧+⌘+J)\n1. Navigate to the \"MCP\" tab and click \"Add MCP Server\"\n1. Add the following JSON configuration.",
     "windsurfInstructions": "Two easy steps to set up MCP with Cascase in Windsurf.\n\n1. Navigate to Windsurf - Settings -> Advanced Settings or Command Palette -> Open Windsurf settings page.\n1. Scroll down to the Cascade section and you will find the option to add a new server, view existing servers, and a button to view the raw JSON config file at `mcp_config.json`. Add the following to it:"
   },
   "coreHTTPTriggerServiceForm": {
