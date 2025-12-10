@@ -18,8 +18,8 @@ if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
     export BASEROW_PUBLIC_URL="https://$RAILWAY_PUBLIC_DOMAIN"
 fi
 
-# Otherwise default to app.doozatable.com if no specific override is provided.
-export BASEROW_PUBLIC_URL="${BASEROW_PUBLIC_URL:-https://app.doozatable.com}"
+# Otherwise default to tables.dooza.co if no specific override is provided.
+export BASEROW_PUBLIC_URL="${BASEROW_PUBLIC_URL:-https://tables.dooza.co}"
 
 # 2. SECURITY & HOSTING
 # ---------------------
