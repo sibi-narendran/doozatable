@@ -13,9 +13,8 @@ RUN mkdir -p /premium/web-frontend /enterprise/web-frontend /web-frontend
 
 # 2. Install Dependencies
 # Copy package files first to leverage Docker cache
+# Only web-frontend has a package.json in this repo structure
 COPY web-frontend/package.json web-frontend/yarn.lock /web-frontend/
-COPY premium/web-frontend/package.json /premium/web-frontend/
-COPY enterprise/web-frontend/package.json /enterprise/web-frontend/
 
 WORKDIR /web-frontend
 
