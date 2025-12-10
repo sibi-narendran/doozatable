@@ -44,7 +44,7 @@ ENV NODE_ENV=production
 ENV BASEROW_OSS_ONLY=false
 
 # Run the build command
-# --ignore-engines is required because yarn run enforces engine checks again
+# Engine check relaxed in package.json, but keeping flag for safety
 RUN yarn build --ignore-engines
 
 # ==========================================
