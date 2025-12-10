@@ -7,6 +7,14 @@ FROM node:22-bookworm-slim AS frontend-builder
 
 WORKDIR /app
 
+# 0. Install Build Dependencies
+# 'node-sass' and other native modules require Python and C++ compilers
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 # 1. Setup Directory Structure
 # Baserow's Nuxt config expects sibling directories for premium/enterprise
 RUN mkdir -p /premium/web-frontend /enterprise/web-frontend /web-frontend
