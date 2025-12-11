@@ -42,7 +42,9 @@ COPY enterprise/web-frontend /enterprise/web-frontend
 # 4. Build
 # Set production environment variables
 ENV NODE_ENV=production
-ENV BASEROW_OSS_ONLY=false
+# NOTE: Do NOT set BASEROW_OSS_ONLY here! 
+# Setting it to "false" (string) is truthy in JS and DISABLES premium modules.
+# Leave it unset to include premium/enterprise features.
 
 # Run the build command
 # Engine check relaxed in package.json, but keeping flag for safety
