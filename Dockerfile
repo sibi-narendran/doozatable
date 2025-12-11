@@ -58,9 +58,13 @@ FROM baserow/baserow:2.0.1
 # Switch to root to modify system files
 USER root
 
-# 1. Update Backend Code (Optional but recommended)
+# 1. Update Backend Code
 # Overwrite backend code with local version to ensure sync
+# IMPORTANT: Must copy ALL backend directories (core, premium, enterprise)
+# The base image has older versions that don't support BASEROW_ENABLE_ALL_FEATURES
 COPY backend /baserow/backend
+COPY premium/backend /baserow/premium/backend
+COPY enterprise/backend /baserow/enterprise/backend
 
 # 2. Setup Frontend Code
 # Remove the original pre-built assets and source code
@@ -77,7 +81,7 @@ RUN chmod +x /railway-entrypoint.sh
 # Ensure the baserow user owns all necessary directories for runtime
 # Note: /baserow/data permissions will be fixed at runtime for Railway volumes
 RUN mkdir -p /baserow/data /baserow/media /baserow/caddy && \
-    chown -R 9999:9999 /baserow/web-frontend /baserow/backend /baserow/data /baserow/media /baserow/caddy
+    chown -R 9999:9999 /baserow/web-frontend /baserow/backend /baserow/premium/backend /baserow/enterprise/backend /baserow/data /baserow/media /baserow/caddy
 
 # Start the application
 # Clear inherited CMD to ensure clean entrypoint execution
